@@ -22,3 +22,6 @@ class Board:
         for line in self.board:
             for element in line:
                 pass
+
+    def verify_key(self):
+        pass
