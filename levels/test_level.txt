@@ -1,0 +1,6 @@
+{'number': 0, 'energy_per_step': 10, 'steps': 50, 'goal': 5, 'width': 10, 'hieght': 5}
+g0_g0_g0_g0_g0_g0_g0_g0_g0_g0
+g0_g0_g0_o0_w0_w0_w0_w0_o1_o1
+g0_o1_o2_o3_w0_w0_w0_w0_w0_w0
+g0_g0_b0_g2_g0_g0_g0_g0_g0_g0
+f0_f0_f1_g0_g0_g0_g0_g0_g0_f1
