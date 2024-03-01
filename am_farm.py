@@ -1,5 +1,4 @@
 import pygame
-import random
 import sprite_system_light
 
 pygame.init()
@@ -27,7 +26,8 @@ class Board:
         self.key = key
         self.width, self.height = size
         self.cell = cell
-        self.board = [[0] * self.width for i in range(self.height)]
+        self.board = [[0] * self.width for _ in range(self.height)]
+        self.selected = []
 
     def load_level_board(self, level_file):
         file = open(level_file, 'r+')
@@ -42,9 +42,12 @@ class Board:
 
     def render(self):
         all_sprites.draw(screen)
-        for i in range(self.height):
-            for j in range(self.width):
-                pygame.draw.rect(screen, pygame.Color('white'), (j * self.cell, i * self.cell, self.cell, self.cell), 1)
+        for y in range(self.height):
+            for x in range(self.width):
+                colour = 'white'
+                if (x, y) in self.selected:
+                    colour = 'blue'
+                pygame.draw.rect(screen, pygame.Color(colour), (x * self.cell, y * self.cell, self.cell, self.cell), 1)
         pygame.display.flip()
 
     def set_all_sprites(self):
@@ -55,6 +58,28 @@ class Board:
                 cell_subtype = int(cell[1])
                 current_thing = generator[cell_type]
                 current_thing[0](x, y, cell_subtype, all_sprites, current_thing[1])
+
+    def get_cell(self, mouse_pos):
+        cell_x = mouse_pos[0] // self.cell
+        cell_y = mouse_pos[1] // self.cell
+        if cell_x < 0 or cell_x >= self.width or cell_y < 0 or cell_y >= self.height:
+            return None
+        return cell_x, cell_y
+
+    def select(self, cords):
+        x, y = cords[0], cords[1]
+        if len(self.selected) < 5 and (x, y) not in self.selected:
+            self.selected.append((x, y))
+        elif (x, y) in self.selected:
+            self.selected.remove((x, y))
+
+    def next_step(self):
+        for x_cord, y_cord in self.selected:
+            ground.update(x_cord, y_cord)
+        self.selected.clear()
+
+
+
 
 
 farm = Board((10, 5), 30)
@@ -68,12 +93,15 @@ while playing:
         if event.type == pygame.QUIT:
             playing = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            field = random.choice(ground.sprites())
-            x, y = field.x_cord, field.y_cord
-            for i in water:
-                if i.watering(farm, (x, y)):
-                    ground.update(x, y)
-                    break
+            farm.select(farm.get_cell(event.pos))
+            #if cords:
+            #    x, y = cords
+            #    for i in water:
+            #        if i.watering(farm, (x, y)):
+            #            ground.update(x, y)
+            #            break
+        elif event.type == pygame.KEYDOWN:
+            farm.next_step()
     farm.render()
 
 
