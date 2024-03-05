@@ -25,8 +25,8 @@ class Cell(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.image = load_image(self.keys[position_key] + '.png')
         self.rect = self.image.get_rect()
-        self.rect.x = x_cord * 30
-        self.rect.y = y_cord * 30
+        self.rect.x = x_cord * 30 + 100
+        self.rect.y = y_cord * 30 + 100
         self.x_cord = x_cord
         self.y_cord = y_cord
         self.position_key = position_key
@@ -91,4 +91,9 @@ class Sprite_group(pygame.sprite.Group):
 
     def __init__(self):
         super().__init__()
+
+    def sprite_position_key(self, x_cord, y_cord):
+        for sprite in self.sprites():
+            if sprite.x_cord == x_cord and sprite.y_cord == y_cord:
+                return sprite.position_key
 
